@@ -2,7 +2,6 @@
 import threading
 import numpy as np
 
-# Define a function to multiply a row by a column
 def multiply_row_by_column(result, A, B, row):
     for i in range(len(B[0])):  # For each column in B
         # Compute the dot product of the row of A and the column of B
@@ -18,8 +17,6 @@ def threaded_matrix_multiply(A, B):
     
     # Resultant matrix of zeros
     result = [[0 for _ in range(num_cols_B)] for _ in range(num_rows_A)]
-    
-    # List to keep track of threads
     threads = []
 
     # Create a new thread for each row of A
@@ -34,7 +31,6 @@ def threaded_matrix_multiply(A, B):
 
     return result
 
-# Test the function
 if __name__ == "__main__":
     A = np.random.randint(10, size=(4, 4))
     B = np.random.randint(10, size=(4, 4))
