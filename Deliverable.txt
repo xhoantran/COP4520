@@ -1,0 +1,21 @@
+Challenges Encountered:
+
+Performance Optimization: Ensuring the threaded approach efficiently reduces computation time compared to traditional methods.
+Thread Management: Balancing the workload among multiple threads to prevent any single thread from becoming a bottleneck.
+Memory Management: Handling large matrices within the constraints of system memory to avoid overflow and ensure efficient data access.
+Synchronization: Implementing mechanisms to prevent data corruption when multiple threads access and modify shared data.
+Scalability: Adapting the solution to work effectively across different hardware setups and matrix sizes.
+Tasks:
+
+Algorithm Development: Design a system for dividing matrices into blocks and assigning them to threads.
+Code Implementation: Write multithreaded code in Python, ensuring it is modular, readable, and maintainable.
+Testing: Conduct thorough tests to compare the performance of the threaded approach against traditional matrix multiplication methods.
+Optimization: Fine-tune the threading model and matrix division logic based on test results to achieve optimal performance.
+Documentation: Create comprehensive documentation detailing the design choices, code structure, and usage instructions.
+Goals:
+
+Efficiency Improvement: Significantly reduce the time required for matrix multiplication, especially for large matrices.
+Resource Utilization: Make efficient use of available CPU cores by distributing the workload evenly across multiple threads.
+Scalable Solution: Develop a solution that scales well with increasing matrix sizes and available processing power.
+User-Friendly Design: Ensure that the final product is easy to use for individuals without deep technical knowledge of parallel computing.
+Foundation for Future Work: Lay the groundwork for future extensions, such as distributed computing or GPU acceleration.
