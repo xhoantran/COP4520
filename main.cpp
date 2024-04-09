@@ -1,10 +1,3 @@
-/*
- * Matrix multiplication using Naive, Strassen's and Divide and Conquer algorithms
- *
- * To run the program, use the following command:
- * 
- */
-
 #include <iostream>
 #include <vector>
 #include <random>
@@ -29,6 +22,37 @@ vector<vector<int>> naiveMatrixMult(const vector<vector<int>> &A, const vector<v
         C[i][j] += A[i][k] * B[k][j];
       }
     }
+  }
+
+  return C;
+}
+
+// Naive matrix multiplication with multi-threading
+vector<vector<int>> naiveMatrixMultMultiThreading(const vector<vector<int>> &A, const vector<vector<int>> &B)
+{
+  int n = A.size();
+  vector<vector<int>> C(n, vector<int>(n, 0));
+
+  // Create threads
+  vector<thread> threads;
+
+  for (int i = 0; i < n; ++i)
+  {
+    threads.emplace_back([&, i]()
+                         {
+                          for (int j = 0; j < n; ++j)
+                          {
+                            for (int k = 0; k < n; ++k)
+                            {
+                              C[i][j] += A[i][k] * B[k][j];
+                            }
+                          } });
+  }
+
+  // Join threads
+  for (auto &thread : threads)
+  {
+    thread.join();
   }
 
   return C;
@@ -404,6 +428,34 @@ static void BM_NaiveMatrixMultiplication(benchmark::State &state)
   state.SetComplexityN(N);
 }
 
+// Benchmark function for naive matrix multiplication with multi-threading
+static void BM_NaiveMatrixMultiplicationMultiThreading(benchmark::State &state)
+{
+  int N = state.range(0);
+  vector<vector<int>> A(N, vector<int>(N));
+  vector<vector<int>> B(N, vector<int>(N));
+
+  // Fill matrices A and B with random values
+  random_device rd;
+  mt19937 gen(rd());
+  uniform_int_distribution<int> dis(1, 1000);
+
+  for (int i = 0; i < N; ++i)
+  {
+    for (int j = 0; j < N; ++j)
+    {
+      A[i][j] = dis(gen);
+      B[i][j] = dis(gen);
+    }
+  }
+
+  for (auto _ : state)
+  {
+    vector<vector<int>> C = naiveMatrixMultMultiThreading(A, B);
+  }
+  state.SetComplexityN(N);
+}
+
 // Benchmark function for Strassen's matrix multiplication
 static void BM_StrassenMatrixMultiplication(benchmark::State &state)
 {
@@ -432,7 +484,7 @@ static void BM_StrassenMatrixMultiplication(benchmark::State &state)
   state.SetComplexityN(N);
 }
 
-// Benchmark function for Strassen's matrix multiplication with multithreading
+// Benchmark function for Strassen's matrix multiplication with multi-threading
 static void BM_StrassenMatrixMultiplicationMultiThreading(benchmark::State &state)
 {
   int N = state.range(0);
@@ -488,7 +540,7 @@ static void BM_DivideAndConquerMatrixMultiplication(benchmark::State &state)
   state.SetComplexityN(N);
 }
 
-// Benchmark function for divide and conquer matrix multiplication with multithreading
+// Benchmark function for divide and conquer matrix multiplication with multi-threading
 static void BM_DivideAndConquerMatrixMultiplicationMultiThreading(benchmark::State &state)
 {
   int N = state.range(0);
@@ -516,12 +568,13 @@ static void BM_DivideAndConquerMatrixMultiplicationMultiThreading(benchmark::Sta
   state.SetComplexityN(N);
 }
 
-// Register the benchmarks
-BENCHMARK(BM_NaiveMatrixMultiplication)->Range(2, 512)->Complexity();
-BENCHMARK(BM_StrassenMatrixMultiplication)->Range(2, 64)->Complexity();
-BENCHMARK(BM_StrassenMatrixMultiplicationMultiThreading)->Range(2, 512)->Complexity();
-BENCHMARK(BM_DivideAndConquerMatrixMultiplication)->Range(2, 64)->Complexity();
-BENCHMARK(BM_DivideAndConquerMatrixMultiplicationMultiThreading)->Range(2, 64)->Complexity();
+// Register the benchmarks, 2 <= N <= 512, step size = N * 2, 2, 4, 8, 16, 32, 64, 128, 256, 512
+BENCHMARK(BM_NaiveMatrixMultiplication)->RangeMultiplier(2)->Range(2, 512)->Complexity();
+BENCHMARK(BM_NaiveMatrixMultiplicationMultiThreading)->RangeMultiplier(2)->Range(2, 512)->Complexity();
+BENCHMARK(BM_StrassenMatrixMultiplication)->RangeMultiplier(2)->Range(2, 512)->Complexity();
+BENCHMARK(BM_StrassenMatrixMultiplicationMultiThreading)->RangeMultiplier(2)->Range(2, 512)->Complexity();
+BENCHMARK(BM_DivideAndConquerMatrixMultiplication)->RangeMultiplier(2)->Range(2, 512)->Complexity();
+BENCHMARK(BM_DivideAndConquerMatrixMultiplicationMultiThreading)->RangeMultiplier(2)->Range(2, 512)->Complexity();
 
 // Run the benchmark
 BENCHMARK_MAIN();
