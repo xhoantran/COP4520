@@ -521,7 +521,7 @@ BENCHMARK(BM_NaiveMatrixMultiplication)->Range(2, 512)->Complexity();
 BENCHMARK(BM_StrassenMatrixMultiplication)->Range(2, 64)->Complexity();
 BENCHMARK(BM_StrassenMatrixMultiplicationMultiThreading)->Range(2, 512)->Complexity();
 BENCHMARK(BM_DivideAndConquerMatrixMultiplication)->Range(2, 64)->Complexity();
-BENCHMARK(BM_DivideAndConquerMatrixMultiplicationMultiThreading)->Range(2, 512)->Complexity();
+BENCHMARK(BM_DivideAndConquerMatrixMultiplicationMultiThreading)->Range(2, 64)->Complexity();
 
 // Run the benchmark
 BENCHMARK_MAIN();
